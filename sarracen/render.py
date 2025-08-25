@@ -361,7 +361,8 @@ def render(data: 'SarracenDataFrame',  # noqa: F821
         y_data = vectors[:, 1]
         z_data = vectors[:, 2]
 
-    xlim, ylim = _default_bounds(data, x_data, y_data, xlim, ylim)
+    xlim = (x_data.min(), x_data.max())
+    ylim = (y_data.min(), y_data.max())
 
     kwargs.setdefault("origin", 'lower')
     kwargs.setdefault("extent", [xlim[0], xlim[1], ylim[0], ylim[1]])
