@@ -86,6 +86,9 @@ def _default_bounds(data: 'SarracenDataFrame',  # noqa: F821
     x_max = xlim[1] if xlim is not None and xlim[1] is not None else None
     y_max = ylim[1] if ylim is not None and ylim[1] is not None else None
 
+    print("dataa:",data)
+    print("x: ",x)
+    print("loc:",data.loc[:, x])
     x_min = data.loc[:, x].min() if x_min is None else x_min
     y_min = data.loc[:, y].min() if y_min is None else y_min
     x_max = data.loc[:, x].max() if x_max is None else x_max
