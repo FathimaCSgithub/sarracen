@@ -12,7 +12,7 @@ Or, they can be accessed through a `SarracenDataFrame` object, for example:
 from typing import Any, Union, Tuple
 
 import numpy as np
-from sarracen.interpolate.interpolate import _default_xyz, _rotate_xyz
+import pandas as pd
 from scipy.spatial.transform import Rotation
 import seaborn as sns
 from matplotlib import pyplot as plt
@@ -322,7 +322,42 @@ def render(data: 'SarracenDataFrame',  # noqa: F821
         ax = plt.gca()
 
     x, y = _default_axes(data, x, y)
-    x_data, y_data, z_data = _rotate_xyz(data, x, y, z, rotation, rot_origin)
+
+    x_data = data[x].to_numpy()
+    y_data = data[y].to_numpy()
+    z_data = data[z].to_numpy()
+    if rotation is not None:
+        if not isinstance(rotation, Rotation):
+            rotation_obj = Rotation.from_euler('zyx',
+                                               rotation,
+                                               degrees=True)
+        else:
+            rotation_obj = rotation
+
+        vectors = data[[x, y, z]].to_numpy()
+
+        if rot_origin is None:
+            # rot_origin = [0, 0, 0]
+            rot_origin_arr = (vectors.min(0) + vectors.max(0)) / 2
+        elif rot_origin == 'com':
+            rot_origin_arr = data.centre_of_mass()
+        elif rot_origin == 'midpoint':
+            rot_origin_arr = (vectors.min(0) + vectors.max(0)) / 2
+        elif not isinstance(rot_origin, (list, pd.Series, np.ndarray)):
+            raise ValueError("rot_origin should be an [x, y, z] point or "
+                             "'com' or 'midpoint'")
+        elif len(rot_origin) != 3:
+            raise ValueError("rot_origin should specify [x, y, z] point.")
+        else:
+            rot_origin_arr = rot_origin
+        vectors = vectors - rot_origin_arr
+        vectors = rotation_obj.apply(vectors)
+        vectors = vectors + rot_origin_arr
+
+        x_data = vectors[:, 0]
+        y_data = vectors[:, 1]
+        z_data = vectors[:, 2]
+
     xlim, ylim = _default_bounds(data, x_data, y_data, xlim, ylim)
 
     kwargs.setdefault("origin", 'lower')
@@ -455,7 +490,7 @@ def lineplot(data: 'SarracenDataFrame',  # noqa: F821
     if isinstance(ylim, float) or isinstance(ylim, int):
         ylim = ylim, ylim
 
-    x, y, z = _default_xyz(data, x, y, z)
+    x, y = _default_axes(data, x, y)
     xlim, ylim = _default_bounds(data, x, y, xlim, ylim)
 
     if data.get_dim() == 2:
