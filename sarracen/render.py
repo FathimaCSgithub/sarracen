@@ -390,8 +390,7 @@ def render(data: 'SarracenDataFrame',  # noqa: F821
             ax.set_xlabel(x)
             ax.set_ylabel(y)
         else:
-            ax.set_xticks([])
-            ax.set_yticks([])
+            pass
     else:
         ax.set_xlabel(x)
         ax.set_ylabel(y)
