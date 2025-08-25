@@ -12,6 +12,7 @@ Or, they can be accessed through a `SarracenDataFrame` object, for example:
 from typing import Any, Union, Tuple
 
 import numpy as np
+from sarracen.interpolate.interpolate import _rotate_xyz
 from scipy.spatial.transform import Rotation
 import seaborn as sns
 from matplotlib import pyplot as plt
@@ -321,7 +322,8 @@ def render(data: 'SarracenDataFrame',  # noqa: F821
         ax = plt.gca()
 
     x, y = _default_axes(data, x, y)
-    xlim, ylim = _default_bounds(data, x, y, xlim, ylim)
+    x_data, y_data, z_data = _rotate_xyz(data, x, y, z, rotation, rot_origin)
+    xlim, ylim = _default_bounds(data, x_data, y_data, xlim, ylim)
 
     kwargs.setdefault("origin", 'lower')
     kwargs.setdefault("extent", [xlim[0], xlim[1], ylim[0], ylim[1]])

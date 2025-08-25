@@ -1060,6 +1060,7 @@ def interpolate_3d_proj(data: 'SarracenDataFrame',  # noqa: F821
         rotation, rot_origin = _corotate(corotation, rotation)
 
     x_data, y_data, z_data = _rotate_xyz(data, x, y, z, rotation, rot_origin)
+    xlim, ylim = _default_bounds(data, x, y, xlim, ylim)
     kernel = kernel if kernel is not None else data.kernel
     backend = backend if backend is not None else data.backend
 
