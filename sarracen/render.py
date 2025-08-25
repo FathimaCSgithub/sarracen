@@ -12,7 +12,7 @@ Or, they can be accessed through a `SarracenDataFrame` object, for example:
 from typing import Any, Union, Tuple
 
 import numpy as np
-from sarracen.interpolate.interpolate import _rotate_xyz
+from sarracen.interpolate.interpolate import _default_xyz, _rotate_xyz
 from scipy.spatial.transform import Rotation
 import seaborn as sns
 from matplotlib import pyplot as plt
@@ -455,7 +455,7 @@ def lineplot(data: 'SarracenDataFrame',  # noqa: F821
     if isinstance(ylim, float) or isinstance(ylim, int):
         ylim = ylim, ylim
 
-    x, y = _default_axes(data, x, y)
+    x, y, z = _default_xyz(data, x, y, z)
     xlim, ylim = _default_bounds(data, x, y, xlim, ylim)
 
     if data.get_dim() == 2:
