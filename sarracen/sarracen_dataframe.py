@@ -789,4 +789,6 @@ class SarracenDataFrame(DataFrame):
         int
             The number of positional dimensions.
         """
-        return 3 if self.zcol is not None else 2
+        if not (self.xcol is None or self.ycol is None or self.zcol is None):
+            return 3
+        return 2
