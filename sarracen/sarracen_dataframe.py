@@ -792,6 +792,7 @@ class SarracenDataFrame(DataFrame):
         print("xcol: ", self.xcol is None)
         print("ycol: ", self.ycol is None)
         print("zcol: ", self.zcol is None)
+        print("All: ", not (self.xcol is None or self.ycol is None or self.zcol is None))
         if not (self.xcol is None or self.ycol is None or self.zcol is None):
             return 3
         return 2
